@@ -62,25 +62,25 @@ const TableActions = ({ table }: TableActionsProps) => {
   const [deleteTableConfirmation, setDeleteTableConfirmation] = useState(false);
   const [deleteColumnId, setDeleteColumnId] = useState<string | null>(null);
 
-  // Check if the table name already exists
-  const isTableNameDuplicate = (name: string) => {
+  const isTableNameDuplicate = (name: string, currentTableId: string) => {
     const duplicate = tables?.some(
-      (t) => t.name.toLowerCase() === name.toLowerCase()
+      (t) =>
+        t.id !== currentTableId && t.name.toLowerCase() === name.toLowerCase()
     );
-    console.log({ name, tables, duplicate });
+    console.log({ name, currentTableId, tables, duplicate });
     return duplicate;
   };
 
-  // Check if the column name already exists within the same table
-  const isColumnNameDuplicate = (name: string) => {
+  const isColumnNameDuplicate = (name: string, currentColumnId: string) => {
     return table.columns.some(
-      (c) => c.name.toLowerCase() === name.toLowerCase()
+      (c) =>
+        c.id !== currentColumnId && c.name.toLowerCase() === name.toLowerCase()
     );
   };
 
   const handleAddColumn = () => {
     if (newColumnName) {
-      if (isColumnNameDuplicate(newColumnName)) {
+      if (isColumnNameDuplicate(newColumnName, "")) {
         toast({
           title: "Column name already exists",
           description: `A column named ${newColumnName} already exists in table ${table.name}.`,
@@ -106,7 +106,7 @@ const TableActions = ({ table }: TableActionsProps) => {
   };
 
   const handleUpdateTableName = () => {
-    if (isTableNameDuplicate(tempTableName)) {
+    if (isTableNameDuplicate(tempTableName, table.id)) {
       toast({
         title: "Table name already exists",
         description: `A table named ${tempTableName} already exists.`,
@@ -133,7 +133,7 @@ const TableActions = ({ table }: TableActionsProps) => {
       const { name, ...editedTempColumn } = updatedColumn; // Destructure and omit the 'name' property
 
       // Check if the column name is duplicate before updating
-      if (isColumnNameDuplicate(updatedColumn.name)) {
+      if (isColumnNameDuplicate(updatedColumn.name, columnId)) {
         toast({
           title: "Column name already exists",
           description: `A column named ${updatedColumn.name} already exists in table ${table.name}.`,
