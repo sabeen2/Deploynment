@@ -83,7 +83,7 @@ const TableActions = ({ table }: TableActionsProps) => {
       if (isColumnNameDuplicate(newColumnName, "")) {
         toast({
           title: "Column name already exists",
-          description: `A column named ${newColumnName} already exists in table ${table.name}.`,
+          description: `A column named ${newColumnName} already exists in table ${table.name}`,
           variant: "destructive",
         });
         return;
