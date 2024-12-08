@@ -138,16 +138,19 @@ const Toolbar = ({ toggleSidebar }: ToolbarProps) => {
   };
 
   const handleExport = () => {
-    const data = JSON.stringify({ tables, relationships }, null, 2);
-    const blob = new Blob([data], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "database_diagram.json";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    const data = localStorage.getItem("databaseDiagram");
+
+    if (data) {
+      const blob = new Blob([data], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "database_diagram.json";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
 
     // Show export success toast
     toast({
@@ -250,7 +253,7 @@ const Toolbar = ({ toggleSidebar }: ToolbarProps) => {
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsImportModalOpen(true)}
-                className="gap-1.5 hidden"
+                className="gap-1.5 "
               >
                 <Upload size={18} />
                 <span className="hidden md:inline">Import</span>
@@ -314,7 +317,7 @@ const Toolbar = ({ toggleSidebar }: ToolbarProps) => {
                 Cancel
               </Button>
               <Button
-                className="hidden"
+                // className="hidden"
                 onClick={handleImport}
                 disabled={!selectedFile}
               >
